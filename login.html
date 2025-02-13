@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login Form</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <h2>Login</h2>
+        <form id="loginForm">
+            <div class="form-group">
+                <label for="username">Username</label>
+                <input type="text" id="username" name="username" required>
+            </div>
+            <div class="form-group">
+                <label for="password">Password</label>
+                <input type="password" id="password" name="password" required>
+            </div>
+            <div class="submit">
+                <button onclick="window.location.href = 'index.html';" type="submit" >Login</button>
+            <a href="register.html">Create Account</a>
+            </div>
+            
+        </form>
+        <p id="message" class="message"></p>
+    </div>
+
+    <script>
+        // Wait for DOM to be fully loaded
+        document.addEventListener('DOMContentLoaded', function() {
+            const loginForm = document.getElementById('loginForm');
+            const messageElement = document.getElementById('message');
+
+            // Check if user is already logged in
+            const storedData = localStorage.getItem('userData');
+            if (storedData) {
+                const userData = JSON.parse(storedData);
+                messageElement.textContent = `Welcome back, ${userData.username}!`;
+                messageElement.className = 'message success';
+            }
+
+            // Handle form submission
+            loginForm.addEventListener('submit', function(e) {
+                e.preventDefault();
+                
+                const username = document.getElementById('username').value;
+                const password = document.getElementById('password').value;
+                
+                // Store user data in localStorage
+                const userData = {
+                    username: username,
+                    password: password, // Note: In a real application, never store passwords in plain text
+                    loginTime: new Date().toISOString()
+                };
+                
+                try {
+                    localStorage.setItem('userData', JSON.stringify(userData));
+                    messageElement.textContent = 'Login successful!';
+                    messageElement.className = 'message success';
+                    
+                    // Clear form
+                    loginForm.reset();
+                    
+                    // Display stored data
+                    console.log('Stored user data:', JSON.parse(localStorage.getItem('userData')));
+                } catch (error) {
+                    messageElement.textContent = 'Error storing data. Please try again.';
+                    messageElement.className = 'message error';
+                    console.error('Error:', error);
+                }
+            });
+        });
+    </script>
+</body>
+</html>
